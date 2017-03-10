@@ -1,0 +1,22 @@
+{
+  "name": "feedme-backend",
+  "version": "0.1.1",
+  "description": "Web backend for Feed Me! application",
+  "main": "bootstrap.js",
+  "license": "GPL-3.0",
+  "repository": "https://github.com/Imposter/feedme-backend",
+  "devDependencies": {
+    "@types/node": "^7.0.5"
+  },
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-serve-static-core": "^0.1.1",
+    "form-data": "^2.1.2",
+    "google-images": "^2.1.0",
+    "log4js": "^1.1.1",
+    "request": "^2.81.0",
+    "serve-static": "^1.12.1",
+    "typings": "^2.1.0",
+    "yelp-fusion": "^1.0.3"
+  }
+}

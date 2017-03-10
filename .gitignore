@@ -1,3 +1,17 @@
+# Sensitive info
+*.log
+config.json
+
+# Javascript (Since we're writing in TypeScript)
+*.js
+*.js.map
+
+# VS Code
+.vscode
+
+# Typings
+typings
+
 # Logs
 logs
 *.log

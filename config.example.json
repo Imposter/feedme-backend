@@ -1,0 +1,37 @@
+{
+    "port": 5050,
+	"secure": false,
+	"keyPath": "secure-key.pem",
+    "certPath": "secure-cert.pem",
+	"maxWorkers": 0,
+	"google": {
+        "cseId": "GOOGLE_CUSTOM_SEARCH_ENGINE_ID",
+        "csApiKey": "GOOGLE_CUSTOM_SEARCH_ENGINE_API_KEY"
+    },
+    "yelp": {
+		"id": "YELP_ID",
+		"secret": "YELP_SECRET"
+	},
+    "logger": {
+		"appenders": [
+			{
+				"type": "console",
+				"layout": {
+					"type": "pattern",
+					"pattern": "%d{hh:mm:ss} %p %c %m"
+				}
+			},
+			{
+				"type": "file",
+				"filename": "server.log",
+				"maxLogSize": 1000000,
+				"backups": 3,
+				"layout": {
+					"type": "pattern",
+					"pattern": "%d{hh:mm:ss} %p %c %m"
+				}
+			}
+		],
+		"replaceConsole": false
+	}
+}
