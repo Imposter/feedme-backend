@@ -7,11 +7,11 @@
 */
 
 export enum ApiResponseCode {
-    SUCCESS = 0,
+    SUCCESS,
     ERROR,
 
     // Search
-    SEARCH = 500,
+    SEARCH,
     SEARCH_INVALID_PARAMETERS,
     SEARCH_FOOD_IMAGE_NOT_FOUND,
     SEARCH_FOOD_IMAGE_ERROR,
