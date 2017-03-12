@@ -12,13 +12,11 @@ import ApiResponseCode from "./apiresponsecode";
 import Logger from "../utility/logger";
 import * as express from "express";
 const GoogleImages = require("google-images");
-const Yelp = require("yelp-fusion");
+const GoogleMaps = require("@google/maps");
 
 export default class ApiServer extends HttpListener {
     private images: any;
-    private yelp: any;
-    private yelpTimeout: number;
-    private categoryFilter: string[];
+    private maps: any;
 
     constructor(options: any) {
         super(options.port, options.secure, options.keyPath, options.certPath);
@@ -37,24 +35,11 @@ export default class ApiServer extends HttpListener {
             })
         });
 
-        // Filters
-        this.categoryFilter = options.categoryFilter;
-
         // Create Google Images instance
         this.images = new GoogleImages(options.google.cseId, options.google.csApiKey);
 
-        // Create Yelp instance
-        this.yelpTimeout = 0;
-        var getAccessToken = () => {
-            Yelp.accessToken(options.yelp.id, options.yelp.secret).then((response: any) => {
-                this.yelp = Yelp.client(response.jsonBody.access_token);
-                this.yelpTimeout = response.jsonBody.expires_in - 60;
-
-                setTimeout(getAccessToken, this.yelpTimeout);
-            });
-        };
-
-        setTimeout(getAccessToken, this.yelpTimeout);
+        // Create Google Maps instance
+        this.maps = new GoogleMaps.createClient({ key: options.google.mapsApiKey });
 
         // Add handlers
         this.AddOnRequestReceived("*", (request: any, response: any) => {
@@ -88,51 +73,30 @@ export default class ApiServer extends HttpListener {
                 Logger.Info("ApiServer", "Search::NearbyFoodPlaces request from " + request.connection.remoteAddress + " " + JSON.stringify(parameters));
 
                 var food = parameters.food;
-                var latitude = parameters.latitude;
-                var longitude = parameters.longitude;
-                var radius = parameters.radius;
-                var limit = parameters.limit;
+                var latitude = parseFloat(parameters.latitude);
+                var longitude = parseFloat(parameters.longitude);
+                var radius = parseInt(parameters.radius);
                 if (food == null || latitude == null || longitude == null || radius == null) {
                     this.send(response, new ApiResponse(ApiResponseCode.SEARCH_INVALID_PARAMETERS));
                 } else {
-                    this.yelp.search({
-                        term: food,
-                        latitude: latitude,
-                        longitude: longitude,
-                        radius: radius, // Max: 40000m
-                        limit: limit, // Max: 50
-                        categories: "food",
-                        open_now: true
-                    }).then((data: any) => {
-                        var restaurants: any = [];
-                        data.jsonBody.businesses.forEach((business: any) => {
-                            var add = true;
-                            for (var i = 0; i < business.categories.length; i++) {
-                                var category = business.categories[i];
-                                var alias = category.alias;
-
-                                for (var j = 0; j < this.categoryFilter.length; j++) {
-                                    var filter = this.categoryFilter[j];
-                                    if (alias.indexOf(filter) != -1) {
-                                        add = false;
-                                        break;
-                                    }
-                                }
-                                if (!add) {
-                                    break;
-                                }
-                            }
-                            if (add) {
-                                restaurants.push(business);
-                            }
-                        });
-                        
-                        this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
-                            nearby: restaurants
-                        }));
-                    }).catch((error: any) => {
-                        Logger.Error("ApiServer", "ERROR: " + error);
-                        this.send(response, new ApiResponse(ApiResponseCode.ERROR));
+                    this.maps.placesNearby({
+                        language: "en",
+                        location: [ latitude, longitude ],
+                        radius: radius,
+                        minprice: 1,
+                        maxprice: 4,
+                        opennow: true,
+                        type: "restaurant",
+                        keyword: food
+                    }, (error: any, data: any) => {
+                        if (error == null) {
+                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
+                                nearby: data.json.results,
+                                next: data.json.next_page_token
+                            }));
+                        } else {
+                            Logger.Error("ApiServer", "ERROR: " + error);
+                        }
                     });
                 }
             }
