@@ -46,7 +46,7 @@ export default class ApiServer extends HttpListener {
             Logger.Info("ApiServer", "Received request from " + request.connection.remoteAddress + " for resource " + request.path);
 
             // Parse POST parameters
-            var parameters = null;
+            var parameters: any = null;
             try {
                 parameters = JSON.parse(request.rawBody);
             } catch (error) {
@@ -65,7 +65,9 @@ export default class ApiServer extends HttpListener {
                             this.send(response, new ApiResponse(ApiResponseCode.SEARCH_FOOD_IMAGE_NOT_FOUND));
                         } else {
                             var image = images[Math.floor(images.length * Math.random())];
-                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, image.url));
+                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
+                                link: image.url
+                            }));
                         }
                     });
                 }
@@ -76,6 +78,7 @@ export default class ApiServer extends HttpListener {
                 var latitude = parseFloat(parameters.latitude);
                 var longitude = parseFloat(parameters.longitude);
                 var radius = parseInt(parameters.radius);
+                var token = parameters.token;
                 if (food == null || latitude == null || longitude == null || radius == null) {
                     this.send(response, new ApiResponse(ApiResponseCode.SEARCH_INVALID_PARAMETERS));
                 } else {
@@ -87,7 +90,8 @@ export default class ApiServer extends HttpListener {
                         maxprice: 4,
                         opennow: true,
                         type: "restaurant",
-                        keyword: food
+                        keyword: food,
+                        pagetoken: token
                     }, (error: any, data: any) => {
                         if (error == null) {
                             this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
@@ -104,6 +108,8 @@ export default class ApiServer extends HttpListener {
     }
 
     private send(response: express.Response, apiResponse: ApiResponse) {
-        super.SendResponse(response, JSON.stringify(apiResponse));
+        super.SendResponse(response, JSON.stringify(apiResponse), {
+            "Content-Type": "application/json"
+        });
     }
 }

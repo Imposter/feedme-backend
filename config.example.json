@@ -6,12 +6,9 @@
 	"maxWorkers": 0,
 	"google": {
         "cseId": "GOOGLE_CUSTOM_SEARCH_ENGINE_ID",
-        "csApiKey": "GOOGLE_CUSTOM_SEARCH_ENGINE_API_KEY"
+        "csApiKey": "GOOGLE_CUSTOM_SEARCH_ENGINE_API_KEY",
+        "mapsApiKey": "GOOGLE_MAPS_API_KEY"
     },
-    "yelp": {
-		"id": "YELP_ID",
-		"secret": "YELP_SECRET"
-	},
     "logger": {
 		"appenders": [
 			{
