@@ -93,7 +93,6 @@ export default class ApiServer extends HttpListener {
                         pagetoken: token
                     }, (error: any, data: any) => {
                         if (error == null) {
-                            console.log(JSON.stringify(data));
                             this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
                                 nearby: data.json.results,
                                 next: data.json.next_page_token
