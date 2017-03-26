@@ -4,6 +4,7 @@
     "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20170217184459",
     "form-data": "registry:dt/form-data#0.0.0+20161115134730",
     "log4js": "registry:dt/log4js#0.0.0+20160726182927",
+    "mime": "registry:dt/mime#0.0.0+20160428043022",
     "node-uuid": "registry:npm/node-uuid#1.4.7+20160723033700",
     "request": "registry:dt/request#0.0.0+20170306222251",
     "serve-static": "registry:dt/serve-static#1.7.1+20161128184045"

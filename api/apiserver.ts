@@ -46,7 +46,7 @@ export default class ApiServer extends HttpListener {
             Logger.Info("ApiServer", "Received request from " + request.connection.remoteAddress + " for resource " + request.path);
 
             // Parse POST parameters
-            var parameters = null;
+            var parameters: any = null;
             try {
                 parameters = JSON.parse(request.rawBody);
             } catch (error) {
@@ -65,7 +65,9 @@ export default class ApiServer extends HttpListener {
                             this.send(response, new ApiResponse(ApiResponseCode.SEARCH_FOOD_IMAGE_NOT_FOUND));
                         } else {
                             var image = images[Math.floor(images.length * Math.random())];
-                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, image.url));
+                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
+                                link: image.url
+                            }));
                         }
                     });
                 }
@@ -75,6 +77,7 @@ export default class ApiServer extends HttpListener {
                 var food = parameters.food;
                 var latitude = parseFloat(parameters.latitude);
                 var longitude = parseFloat(parameters.longitude);
+                var token = parameters.token;
                 if (food == null || latitude == null || longitude == null) {
                     this.send(response, new ApiResponse(ApiResponseCode.SEARCH_INVALID_PARAMETERS));
                 } else {
@@ -86,7 +89,8 @@ export default class ApiServer extends HttpListener {
                         opennow: true,
                         type: "restaurant",
                         keyword: food,
-                        rankby: "distance"
+                        rankby: "distance",
+                        pagetoken: token
                     }, (error: any, data: any) => {
                         if (error == null) {
                             console.log(JSON.stringify(data));
