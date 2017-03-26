@@ -75,21 +75,21 @@ export default class ApiServer extends HttpListener {
                 var food = parameters.food;
                 var latitude = parseFloat(parameters.latitude);
                 var longitude = parseFloat(parameters.longitude);
-                var radius = parseInt(parameters.radius);
-                if (food == null || latitude == null || longitude == null || radius == null) {
+                if (food == null || latitude == null || longitude == null) {
                     this.send(response, new ApiResponse(ApiResponseCode.SEARCH_INVALID_PARAMETERS));
                 } else {
                     this.maps.placesNearby({
                         language: "en",
                         location: [ latitude, longitude ],
-                        radius: radius,
                         minprice: 1,
                         maxprice: 4,
                         opennow: true,
                         type: "restaurant",
-                        keyword: food
+                        keyword: food,
+                        rankby: "distance"
                     }, (error: any, data: any) => {
                         if (error == null) {
+                            console.log(JSON.stringify(data));
                             this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
                                 nearby: data.json.results,
                                 next: data.json.next_page_token
@@ -104,6 +104,8 @@ export default class ApiServer extends HttpListener {
     }
 
     private send(response: express.Response, apiResponse: ApiResponse) {
-        super.SendResponse(response, JSON.stringify(apiResponse));
+        super.SendResponse(response, JSON.stringify(apiResponse), {
+            "Content-Type": "application/json"
+        });
     }
 }

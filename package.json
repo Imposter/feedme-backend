@@ -17,7 +17,6 @@
     "log4js": "^1.1.1",
     "request": "^2.81.0",
     "serve-static": "^1.12.1",
-    "typings": "^2.1.0",
-    "yelp-fusion": "^1.0.3"
+    "typings": "^2.1.0"
   }
 }
