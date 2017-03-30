@@ -63,6 +63,7 @@ export default class ApiServer extends HttpListener {
                 if (food == null) {
                     this.send(response, new ApiResponse(ApiResponseCode.SEARCH_INVALID_PARAMETERS));
                 } else {
+                    // Request image results from Google
                     this.images.search(food, { size: "large" }).then((images: any) => {
                         if (images.length == 0) {
                             this.send(response, new ApiResponse(ApiResponseCode.SEARCH_FOOD_IMAGE_NOT_FOUND));
@@ -88,6 +89,7 @@ export default class ApiServer extends HttpListener {
                 if (food == null || latitude == null || longitude == null) {
                     this.send(response, new ApiResponse(ApiResponseCode.SEARCH_INVALID_PARAMETERS));
                 } else {
+                    // Request map results from Google
                     this.maps.placesNearby({
                         language: "en",
                         location: [ latitude, longitude ],
@@ -99,6 +101,7 @@ export default class ApiServer extends HttpListener {
                         pagetoken: token
                     }, (error: any, data: any) => {
                         if (error == null) {
+                            // Filter any place types that we don't need
                             var results: any = [];
                             for (var result of data.json.results) {
                                 for (var type of result.types) {

@@ -72,6 +72,7 @@ export default class ClusterManager {
     }
 
     public static CreateWorker(): cluster.Worker {
+        // Fork a process and store the newly created process
         var worker = cluster.fork();
         this.workers.push(worker);
         Logger.Info("ClusterManager", "Created worker " + worker.id);
