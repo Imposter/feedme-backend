@@ -134,7 +134,9 @@ export default class ApiServer extends HttpListener {
                         placeid: place
                     }, (error: any, data: any) => {
                         if (error == null) {
-                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, data.json.result));
+                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
+                                result: data.json.result
+                            }));
                         } else {
                             Logger.Error("ApiServer", "ERROR: " + error);
                         }
