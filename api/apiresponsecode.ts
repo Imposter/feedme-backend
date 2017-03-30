@@ -11,10 +11,12 @@ export enum ApiResponseCode {
     ERROR,
 
     // Search
-    SEARCH,
     SEARCH_INVALID_PARAMETERS,
     SEARCH_FOOD_IMAGE_NOT_FOUND,
     SEARCH_FOOD_IMAGE_ERROR,
+
+    // Place
+    PLACE_INVALID_PARAMETERS,
 }
 
 export default ApiResponseCode;

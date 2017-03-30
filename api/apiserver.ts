@@ -121,6 +121,25 @@ export default class ApiServer extends HttpListener {
                         }
                     });
                 }
+            } else if (request.path == "/search/placeInfo") {
+                Logger.Info("ApiServer", "Search::PlaceInfo request from " + request.connection.remoteAddress + " " + JSON.stringify(parameters));
+
+                var place = parameters.place;
+                if (place == null) {
+                    this.send(response, new ApiResponse(ApiResponseCode.PLACE_INVALID_PARAMETERS));
+                } else {
+                    // Request place details from Google
+                    this.maps.place({
+                        language: "en",
+                        placeid: place
+                    }, (error: any, data: any) => {
+                        if (error == null) {
+                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, data.json.result));
+                        } else {
+                            Logger.Error("ApiServer", "ERROR: " + error);
+                        }
+                    });
+                }
             }
         });
     }
