@@ -15,11 +15,14 @@ const GoogleImages = require("google-images");
 const GoogleMaps = require("@google/maps");
 
 export default class ApiServer extends HttpListener {
+    private placeTypes: any;
     private images: any;
     private maps: any;
 
     constructor(options: any) {
         super(options.port, options.secure, options.keyPath, options.certPath);
+
+        this.placeTypes = options.placeTypes;
 
         // Body parsing
         this.app.use((request: any, response: any, next: any) => {
@@ -64,10 +67,14 @@ export default class ApiServer extends HttpListener {
                         if (images.length == 0) {
                             this.send(response, new ApiResponse(ApiResponseCode.SEARCH_FOOD_IMAGE_NOT_FOUND));
                         } else {
-                            var image = images[Math.floor(images.length * Math.random())];
-                            this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
-                                link: image.url
-                            }));
+                            for (var image of images) {
+                                if (image.type == "image/jpeg") {
+                                    this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
+                                        link: image.url
+                                    }));
+                                    break;
+                                }
+                            }
                         }
                     });
                 }
@@ -87,14 +94,23 @@ export default class ApiServer extends HttpListener {
                         minprice: 1,
                         maxprice: 4,
                         opennow: true,
-                        type: "restaurant",
                         keyword: food,
                         rankby: "distance",
                         pagetoken: token
                     }, (error: any, data: any) => {
                         if (error == null) {
+                            var results: any = [];
+                            for (var result of data.json.results) {
+                                for (var type of result.types) {
+                                    if (this.placeTypes.indexOf(type) > -1) {
+                                        results.push(result);
+                                        break;
+                                    }
+                                }
+                            }
+                            
                             this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
-                                nearby: data.json.results,
+                                nearby: results,
                                 next: data.json.next_page_token
                             }));
                         } else {

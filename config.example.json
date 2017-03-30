@@ -9,6 +9,12 @@
         "csApiKey": "GOOGLE_CUSTOM_SEARCH_ENGINE_API_KEY",
         "mapsApiKey": "GOOGLE_MAPS_API_KEY"
     },
+	"placeTypes": [
+		"food",
+		"restaurant",
+		"cafe",
+		"liquor_store"
+	],
     "logger": {
 		"appenders": [
 			{
