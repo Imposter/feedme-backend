@@ -9,13 +9,14 @@
 import ApiServer from "./api/apiserver";
 import Logger from "./utility/logger";
 const Config = require("./config.json");
+const Package = require("./package.json");
 
 export default class Application {
     public static MasterStart(): void {
     }
 
     public static ChildStart(): void {
-        var server = new ApiServer(Config);
+        var server = new ApiServer(Config, Package);
         
         // Start server
         Logger.Info("Application", "Starting server...");

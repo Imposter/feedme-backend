@@ -18,9 +18,13 @@ export default class ApiServer extends HttpListener {
     private placeTypes: any;
     private images: any;
     private maps: any;
+    private version: String;
 
-    constructor(options: any) {
+    constructor(options: any, currentPackage: any) {
         super(options.port, options.secure, options.keyPath, options.certPath);
+
+        // Version
+        this.version = currentPackage.version;
 
         this.placeTypes = options.placeTypes;
 
@@ -56,7 +60,12 @@ export default class ApiServer extends HttpListener {
                 parameters = request.query;
             }
 
-            if (request.path == "/search/foodImage") {
+            if (request.path == "/system/version") {
+                Logger.Info("ApiServer", "System::Version request from " + request.connection.remoteAddress);
+                this.send(response, new ApiResponse(ApiResponseCode.SUCCESS, {
+                    version: this.version
+                }))
+            } else if (request.path == "/search/foodImage") {
                 Logger.Info("ApiServer", "Search::FoodImage request from " + request.connection.remoteAddress + " " + JSON.stringify(parameters));
 
                 var food = parameters.food;
