@@ -20,7 +20,7 @@ The following are requirements to compile and run the server:
 ###### Note: The server you start will not be used by the application unless the source is modified to connect to the endpoint the server is running on, and will instead use the default server hosted by us.
 
 ### Authors
-- Betty Kwong
-- Eyaz Rehman
-- Rameet Sekhon
-- Rishabh Patel
+- Betty Kwong ([GitHub](https://github.com/bunnehbetz))
+- Eyaz Rehman ([GitHub](https://github.com/Imposter))
+- Rameet Sekhon ([GitHub](https://github.com/rameetss))
+- Rishabh Patel ([GitHub](https://github.com/RPatel97))
