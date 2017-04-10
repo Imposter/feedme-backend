@@ -1,4 +1,4 @@
-# Feed Me! Typscript Backend (feedme-backend)
+# Feed Me! Typescript Backend (feedme-backend)
 ### Introduction
 Feed Me! was created to solve a simple problem that existed: deciding where to eat. We as friends, faced this question on almost a daily basis every time we went out for a meal. We set out to solve this issue by creating an Android application, integrating what we learned in the CSCI 2020U course along with previous knowledge we had of programming in Java and Android. Combining all of this, we created Feed Me! A sleek, intuitive and user friendly app where hundreds of local restaurants are only a few taps away.
 
